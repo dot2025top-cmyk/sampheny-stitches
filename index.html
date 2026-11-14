@@ -84,7 +84,6 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 <div class="step" id="step4"><h4>Step 4: Measurements (inches)</h4><div id="measureForm" style="margin-top:8px"></div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn" onclick="nextStep(3)">Back</button><button class="btn btn-w" onclick="nextStep(5)">Review</button></div></div>
 <div class="step" id="step5"><h4>Step 5: Review</h4><div id="aiReview" style="background:var(--goldL);padding:10px;border-radius:10px;font-size:11px;margin-top:8px"></div><button class="btn btn-g" style="width:100%;margin-top:8px" onclick="addBespoke()">Add Bespoke to Cart</button></div>
 </div></div>
-
 <div class="modal" id="adminModal"><div class="modalBox">
 <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:var(--wine)">⚙️ Admin - Edit Shop</h3><button class="btn" onclick="closeAdmin()">X</button></div>
 <div id="adminLogin">
@@ -123,14 +122,12 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 </div>
 </div>
 </div></div>
-
 <div class="modal" id="editModal"><div class="modalBox">
 <div style="display:flex;justify-content:space-between"><h3 style="color:var(--wine)">✏️ Edit This Cloth</h3><button class="btn" onclick="closeEditModal()">X</button></div>
 <div id="editSingle"></div>
 </div></div>
-
 <script>
-const DEFAULT_SETTINGS = {shopName:"SAMPHENY STITCHES", heroSub:"Male: Caphtan • Native wear • Three piece • Corporate — Female: Caphtan • Gown — All with prices — Ready to wear + AI Bespoke", whatsapp:"2340000000000"};
+const DEFAULT_SETTINGS = {shopName:"SAMPHENY STITCHES", heroSub:"Male: Caphtan • Native wear • Three piece • Corporate — Female: Caphtan • Gown — All with prices — Ready to wear + AI Bespoke", whatsapp:"2348064775670"};
 let settings = JSON.parse(localStorage.getItem('sampheny_settings') || JSON.stringify(DEFAULT_SETTINGS));
 const DEFAULT_PRODUCTS=[
 {id:1,gender:'Male',sub:'Caphtan',name:'Male Caphtan 1 — White Senator Atiku',price:45000,oldPrice:55000,stock:10,fabric:'Atiku',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'White senator, clean stitches'},
