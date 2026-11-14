@@ -54,7 +54,6 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 <button class="btn btn-g" onclick="openAdmin()">⚙️ Admin</button>
 </div>
 </header>
-
 <div class="nav" id="nav"></div>
 <div class="wrap">
 <div id="v-home">
@@ -71,15 +70,10 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 </div></div>
 <div class="grid g4" id="homeGrid"></div>
 </div>
-
 <div id="v-shop" class="hidden"><div class="card wine"><h3>SHOP <button class="btn btn-g" onclick="openAI()">✨ AI Special Sew</button></h3><div style="display:flex;gap:6px;margin-top:6px"><select id="fGender" class="input" style="max-width:130px" onchange="renderShop()"><option value="all">All</option><option>Male</option><option>Female</option></select><select id="fSub" class="input" style="max-width:160px" onchange="renderShop()"><option value="all">All Sub</option><option>Caphtan</option><option>Native wear</option><option>Three piece</option><option>Corporate</option><option>Gown</option></select></div></div><div class="grid g4" id="shopGrid"></div></div>
-
 <div id="v-product" class="hidden"><div class="card"><button class="btn" onclick="switchTab('home')">← Back</button></div><div class="grid g2" id="productDetail"></div></div>
-
 <div id="v-cart" class="hidden"><div class="grid g2"><div class="card"><h3>Cart</h3><div id="cartList"></div></div><div class="card gold"><h3>Checkout + Bespoke Orders</h3><div id="bespokeList"></div><div id="cartTotal" style="margin-top:8px;font-weight:900"></div><input id="cName" class="input" placeholder="Full Name"><input id="cPhone" class="input" placeholder="WhatsApp"><button class="btn btn-w" style="width:100%;margin-top:8px" onclick="placeOrder()">Place Order</button><div id="orderResult"></div></div></div></div>
 </div>
-
-<!-- AI MODAL -->
 <div class="modal" id="aiModal"><div class="modalBox">
 <div style="display:flex;justify-content:space-between"><h3 style="color:var(--wine)">✨ AI Special Sew</h3><button class="btn" onclick="closeAI()">X</button></div>
 <div class="step active" id="step1"><h4>Step 1: Male / Female?</h4><div class="grid g2" style="margin-top:8px"><button class="btn btn-w" style="padding:18px" onclick="setGender('Male')">👔 Male</button><button class="btn bgold" style="padding:18px" onclick="setGender('Female')">👗 Female</button></div></div>
@@ -88,24 +82,20 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 <div class="step" id="step4"><h4>Step 4: Measurements (inches)</h4><div id="measureForm" style="margin-top:8px"></div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn" onclick="nextStep(3)">Back</button><button class="btn btn-w" onclick="nextStep(5)">Review</button></div></div>
 <div class="step" id="step5"><h4>Step 5: Review</h4><div id="aiReview" style="background:var(--goldL);padding:10px;border-radius:10px;font-size:11px;margin-top:8px"></div><button class="btn btn-g" style="width:100%;margin-top:8px" onclick="addBespoke()">Add Bespoke to Cart</button></div>
 </div></div>
-
-<!-- ADMIN MODAL - EDIT AFTER ONLINE -->
 <div class="modal" id="adminModal"><div class="modalBox">
 <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:var(--wine)">⚙️ Admin - Edit Shop</h3><button class="btn" onclick="closeAdmin()">X</button></div>
-
 <div id="adminLogin">
-<p style="font-size:11px;margin-top:8px">Enter admin password to edit prices, products, shop name after you go online. Default: <b>1234</b></p>
+<p style="font-size:11px;margin-top:8px">Enter admin username and password to edit prices, products, shop name.</p>
+<input id="adminUser" class="input" placeholder="Username">
 <input id="adminPass" class="input" type="password" placeholder="Password">
 <button class="btn btn-w" style="width:100%;margin-top:8px" onclick="checkAdmin()">Unlock Admin</button>
 </div>
-
 <div id="adminPanel" class="hidden">
 <h4 style="margin-top:10px">Shop Settings</h4>
 <label style="font-size:10px;font-weight:800">Shop Name</label><input id="editShopName" class="input">
 <label style="font-size:10px;font-weight:800">Hero Subtitle</label><input id="editHeroSub" class="input">
 <label style="font-size:10px;font-weight:800">WhatsApp Number (e.g 2348012345678)</label><input id="editWhatsApp" class="input" placeholder="234...">
 <button class="btn btn-w" style="margin-top:8px" onclick="saveSettings()">Save Settings</button>
-
 <h4 style="margin-top:14px">Add New Product</h4>
 <div class="adminRow">
 <input id="newName" class="input" placeholder="Product Name e.g Male Caphtan 9">
@@ -118,10 +108,8 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 <input id="newDesc" class="input" placeholder="Description">
 <button class="btn btn-g" style="width:100%;margin-top:8px" onclick="addProduct()">+ Add Product</button>
 </div>
-
 <h4>Edit / Delete Products - <span id="adminCount"></span></h4>
 <div id="adminList"></div>
-
 <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
 <button class="btn" onclick="exportData()">⬇️ Export Backup</button>
 <button class="btn" onclick="resetData()">🔄 Reset to Default 50</button>
@@ -130,13 +118,9 @@ header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;paddi
 <p style="font-size:9px;margin-top:8px;color:#666">Tip: After editing on your phone, click Save All. To make the change show for customers on other phones, use Export Backup and replace the data, or use same admin on your main device. For full multi-device sync you go need backend later - this frontend version na for easy editing.</p>
 </div>
 </div></div>
-
 <script>
-// ===== SETTINGS - EDITABLE =====
 const DEFAULT_SETTINGS = {shopName:"SAMPHENY STITCHES", heroSub:"Male: Caphtan • Native wear • Three piece • Corporate — Female: Caphtan • Gown — All with prices — Ready to wear + AI Bespoke", whatsapp:"2340000000000"};
 let settings = JSON.parse(localStorage.getItem('sampheny_settings') || JSON.stringify(DEFAULT_SETTINGS));
-
-// ===== DEFAULT 50 PRODUCTS =====
 const DEFAULT_PRODUCTS=[
 {id:1,gender:'Male',sub:'Caphtan',name:'Male Caphtan 1 — White Senator Atiku',price:45000,oldPrice:55000,stock:10,fabric:'Atiku',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'White senator, clean stitches'},
 {id:2,gender:'Male',sub:'Caphtan',name:'Male Caphtan 2 — Cream Atiku Gold Buttons',price:47000,oldPrice:58000,stock:8,fabric:'Atiku',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Cream with gold buttons'},
@@ -192,7 +176,6 @@ const DEFAULT_PRODUCTS=[
 let products = JSON.parse(localStorage.getItem('sampheny_products') || JSON.stringify(DEFAULT_PRODUCTS));
 function saveProducts(){localStorage.setItem('sampheny_products',JSON.stringify(products))}
 function saveSettingsToStorage(){localStorage.setItem('sampheny_settings',JSON.stringify(settings))}
-
 let cart=[], bespokeCart=[], aiData={gender:'',sub:'',fabric:'',details:'',measures:{},price:0};
 function applySettings(){document.getElementById('shopName').innerText=settings.shopName;document.getElementById('heroTitle').innerHTML=settings.shopName+'<br>...WATCH THAT STITCHES';document.getElementById('heroSub').innerText=settings.heroSub;const m=products.filter(p=>p.gender==='Male').length,f=products.filter(p=>p.gender==='Female').length;document.getElementById('totalBadge').innerText=products.length+' CLOTHES WITH PRICES';document.getElementById('maleBadge').innerText=m+' MALE';document.getElementById('femaleBadge').innerText=f+' FEMALE';}
 function renderNav(){document.getElementById('nav').innerHTML=`<div class="t active" onclick="switchTab('home')">HOME ${products.length}</div><div class="t" onclick="switchTab('shop')">SHOP ALL ${products.length}</div><div class="t" onclick="filterCat('Male','all')">MALE</div><div class="t" onclick="filterCat('Female','all')">FEMALE</div><div class="t gold" onclick="openAI()">✨ AI SPECIAL SEW</div>`;}
@@ -215,11 +198,9 @@ function setSub(s){aiData.sub=s;showStep(3)}
 function buildMeasureForm(){const fields=[['Top length','Top Length'],['Full length','Full Length'],['Shoulder','Shoulder'],['Sleeve length','Sleeve Length'],['Round sleeve','Round Sleeve'],['Chest','Chest'],['Neck','Neck'],['Waist','Waist (Trouser West)'],['Lap','Lap'],['Ankle','Ankle']];let html='<div class="measureGrid">';fields.forEach(([k,l])=>{html+=`<div><label style="font-size:9px;font-weight:800">${l}</label><input id="m_${k}" class="input" placeholder="e.g 32"></div>`});html+='</div>';document.getElementById('measureForm').innerHTML=html;}
 function buildReview(){aiData.fabric=document.getElementById('aiFabric').value;aiData.details=document.getElementById('aiDetails').value;const measures={};document.querySelectorAll('[id^=m_]').forEach(inp=>{if(inp.value)measures[inp.id.replace('m_','')]=inp.value});aiData.measures=measures;let price=aiData.gender==='Male'?(aiData.sub==='Three piece'?85000:aiData.sub==='Native wear'?56000:aiData.sub==='Corporate'?20000:45000):(aiData.sub==='Gown'?60000:50000);document.getElementById('aiReview').innerHTML=`<b>${aiData.gender} — ${aiData.sub}</b><br>Fabric: ${aiData.fabric}<br>Details: ${aiData.details||'Standard'}<br><br>${Object.entries(measures).map(([k,v])=>`• ${k}: ${v}"`).join('<br>')}<br><br><b>Estimate: ₦${price.toLocaleString()}</b>`;aiData.price=price;}
 function addBespoke(){if(!Object.keys(aiData.measures).length)return alert('Enter at least Top length, Shoulder, Chest');bespokeCart.push({...aiData});closeAI();switchTab('cart');renderCart();updateCount();alert('Bespoke added!')}
-
-// ===== ADMIN =====
 function openAdmin(){document.getElementById('adminModal').classList.add('show');document.getElementById('adminLogin').classList.remove('hidden');document.getElementById('adminPanel').classList.add('hidden')}
 function closeAdmin(){document.getElementById('adminModal').classList.remove('show')}
-function checkAdmin(){if(document.getElementById('adminPass').value==='1234'){document.getElementById('adminLogin').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden');document.getElementById('editShopName').value=settings.shopName;document.getElementById('editHeroSub').value=settings.heroSub;document.getElementById('editWhatsApp').value=settings.whatsapp;renderAdminList();}else alert('Wrong password')}
+function checkAdmin(){const u=document.getElementById('adminUser').value.trim();const p=document.getElementById('adminPass').value;if(u==='Sampheny2026' && p==='jwsam2000'){document.getElementById('adminLogin').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden');document.getElementById('editShopName').value=settings.shopName;document.getElementById('editHeroSub').value=settings.heroSub;document.getElementById('editWhatsApp').value=settings.whatsapp;renderAdminList();}else alert('Wrong username or password')}
 function renderAdminList(){document.getElementById('adminCount').innerText=products.length;document.getElementById('adminList').innerHTML=products.map(p=>`<div class="adminRow"><input class="input" value="${p.name.replace(/"/g,'')}" onchange="editField(${p.id},'name',this.value)"><div style="display:flex;gap:6px"><input class="input" type="number" value="${p.price}" onchange="editField(${p.id},'price',this.value)"><input class="input" type="number" value="${p.oldPrice}" onchange="editField(${p.id},'oldPrice',this.value)"><input class="input" type="number" value="${p.stock}" onchange="editField(${p.id},'stock',this.value)"></div><input class="input" value="${p.img}" onchange="editField(${p.id},'img',this.value)" placeholder="Image URL"><input class="input" value="${p.desc}" onchange="editField(${p.id},'desc',this.value)"><div style="display:flex;gap:6px;margin-top:6px"><select class="input" onchange="editField(${p.id},'gender',this.value)"><option ${p.gender==='Male'?'selected':''}>Male</option><option ${p.gender==='Female'?'selected':''}>Female</option></select><select class="input" onchange="editField(${p.id},'sub',this.value)"><option ${p.sub==='Caphtan'?'selected':''}>Caphtan</option><option ${p.sub==='Native wear'?'selected':''}>Native wear</option><option ${p.sub==='Three piece'?'selected':''}>Three piece</option><option ${p.sub==='Corporate'?'selected':''}>Corporate</option><option ${p.sub==='Gown'?'selected':''}>Gown</option></select><button class="btn" onclick="deleteProduct(${p.id})">🗑 Delete</button></div></div>`).join('')}
 function editField(id,field,val){const p=products.find(x=>x.id===id);if(field==='price'||field==='oldPrice'||field==='stock')val=Number(val);p[field]=val;saveProducts();renderHome();renderNav();}
 function deleteProduct(id){if(confirm('Delete this product?')){products=products.filter(p=>p.id!==id);saveProducts();renderAdminList();renderHome();renderNav();}}
@@ -228,7 +209,6 @@ function saveSettings(){settings.shopName=document.getElementById('editShopName'
 function saveAll(){saveProducts();saveSettingsToStorage();renderHome();renderNav();closeAdmin();alert('All saved! Site updated.')}
 function exportData(){const data=JSON.stringify({settings,products},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sampheny-backup.json';a.click();}
 function resetData(){if(confirm('Reset to default 50?')){products=JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));settings=JSON.parse(JSON.stringify(DEFAULT_SETTINGS));saveProducts();saveSettingsToStorage();renderAdminList();renderHome();renderNav();alert('Reset done')}}
-
 renderNav();renderHome();updateCount();
 </script>
 </body>
