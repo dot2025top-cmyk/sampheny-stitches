@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sampheny Stitches</title>
+<style>
+:root{--wine:#4A0E2A;--gold:#C9A86A;--goldL:#F8F0E0;--black:#111;--white:#FFFDFA}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--white);color:var(--black)}
+header{position:sticky;top:0;z-index:99;background:var(--wine);color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:4px solid var(--gold)}
+.search{flex:1;max-width:420px;display:flex;gap:6px}
+.input{width:100%;padding:10px;border-radius:10px;border:2px solid var(--goldL);font-size:12px;background:white;margin-top:6px}
+.btn{padding:8px 12px;border-radius:10px;border:2px solid var(--wine);font-weight:800;font-size:10px;cursor:pointer;background:white;color:var(--wine)}
+.btn-w{background:var(--wine);color:white}.btn-g{background:var(--gold);color:#000;border-color:var(--gold)}
+.cart{background:var(--gold);color:#000;padding:6px 12px;border-radius:20px;font-weight:900;font-size:11px}
+.nav{position:sticky;top:60px;z-index:90;background:white;border-bottom:3px solid var(--wine);display:flex;gap:6px;overflow:auto;padding:10px}
+.nav::-webkit-scrollbar{display:none}
+.t{white-space:nowrap;padding:6px 12px;border-radius:20px;border:2px solid var(--wine);font-size:9px;font-weight:900;cursor:pointer;background:white}
+.t.active{background:var(--wine);color:white}.t.gold{border-color:var(--gold);background:var(--goldL)}
+.wrap{max-width:1400px;margin:auto;padding:12px}
+.card{background:white;border:2px solid var(--wine);border-radius:14px;padding:12px;margin-bottom:10px}
+.card.wine{background:linear-gradient(135deg,var(--wine),#200512);color:white;border:none}
+.card.gold{border-color:var(--gold);background:var(--goldL)}
+.grid{display:grid;gap:8px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1fr 1fr}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.g4,.g2{grid-template-columns:1fr}}
+.prod{border:2px solid var(--wine);border-radius:14px;overflow:hidden;background:white;cursor:pointer}
+.prod.female{border-color:var(--gold)}
+.pimg{height:260px;background:#F5F3EF;overflow:hidden;position:relative;display:grid;place-items:center}
+.pimg img{width:100%;height:100%;object-fit:cover}
+.badge{font-size:7px;padding:3px 7px;border-radius:20px;font-weight:900;border:1px solid;display:inline-block}
+.bwine{background:var(--wine);color:white;border-color:var(--wine)}
+.bgold{background:var(--gold);color:#000;border-color:var(--gold)}
+.bwhite{background:white;color:var(--wine);border-color:var(--wine)}
+.price{color:var(--wine);font-weight:900;font-size:14px}.old{font-size:9px;text-decoration:line-through;opacity:.6}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;place-items:center;padding:10px}
+.modal.show{display:grid}.modalBox{background:white;border-radius:16px;max-width:650px;width:100%;max-height:92vh;overflow:auto;padding:14px;border:3px solid var(--wine)}
+.list{display:flex;justify-content:space-between;align-items:center;padding:8px;border:2px solid var(--goldL);border-radius:10px;margin-bottom:6px;background:white;font-size:11px}
+.step{display:none}.step.active{display:block}
+.measureGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.adminRow{border:2px solid var(--goldL);border-radius:12px;padding:10px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+<div><b id="shopName">SAMPHENY STITCHES</b><br><i style="color:var(--gold);font-size:10px;letter-spacing:3px">...watch that stitches</i></div>
+<div class="search"><input id="search" class="input" style="margin:0" placeholder="Search"><button class="btn btn-w" onclick="doSearch()">Search</button></div>
+<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+<span id="cartCount" class="cart">Cart: 0</span>
+<button class="btn btn-g" onclick="openAI()">✨ AI Sew</button>
+<button class="btn" onclick="switchTab('cart')">Cart</button>
+<button class="btn btn-g" onclick="openAdmin()">⚙️ Admin</button>
+</div>
+</header>
+
+<div class="nav" id="nav"></div>
+<div class="wrap">
+<div id="v-home">
+<div class="card wine"><h2 id="heroTitle">SAMPHENY STITCHES<br>...WATCH THAT STITCHES</h2><p id="heroSub" style="font-size:11px;color:var(--gold);margin-top:4px">Male: Caphtan • Native wear • Three piece • Corporate — Female: Caphtan • Gown — All with prices — Ready to wear + AI Bespoke</p><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><span class="badge bgold" id="totalBadge">50 CLOTHES WITH PRICES</span><span class="badge bwine" id="maleBadge">25 MALE</span><span class="badge bgold" id="femaleBadge">25 FEMALE</span><span class="badge bwhite">AI SPECIAL SEW</span></div></div>
+<div class="card"><div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="btn btn-w" onclick="filterCat('Male','all')">Male All</button>
+<button class="btn" onclick="filterCat('Male','Caphtan')">Male Caphtan</button>
+<button class="btn" onclick="filterCat('Male','Native wear')">Native Wear</button>
+<button class="btn" onclick="filterCat('Male','Three piece')">Three Piece</button>
+<button class="btn" onclick="filterCat('Male','Corporate')">Corporate</button>
+<button class="btn bgold" onclick="filterCat('Female','all')">Female All</button>
+<button class="btn" onclick="filterCat('Female','Caphtan')">Female Caphtan</button>
+<button class="btn" onclick="filterCat('Female','Gown')">Female Gown</button>
+</div></div>
+<div class="grid g4" id="homeGrid"></div>
+</div>
+
+<div id="v-shop" class="hidden"><div class="card wine"><h3>SHOP <button class="btn btn-g" onclick="openAI()">✨ AI Special Sew</button></h3><div style="display:flex;gap:6px;margin-top:6px"><select id="fGender" class="input" style="max-width:130px" onchange="renderShop()"><option value="all">All</option><option>Male</option><option>Female</option></select><select id="fSub" class="input" style="max-width:160px" onchange="renderShop()"><option value="all">All Sub</option><option>Caphtan</option><option>Native wear</option><option>Three piece</option><option>Corporate</option><option>Gown</option></select></div></div><div class="grid g4" id="shopGrid"></div></div>
+
+<div id="v-product" class="hidden"><div class="card"><button class="btn" onclick="switchTab('home')">← Back</button></div><div class="grid g2" id="productDetail"></div></div>
+
+<div id="v-cart" class="hidden"><div class="grid g2"><div class="card"><h3>Cart</h3><div id="cartList"></div></div><div class="card gold"><h3>Checkout + Bespoke Orders</h3><div id="bespokeList"></div><div id="cartTotal" style="margin-top:8px;font-weight:900"></div><input id="cName" class="input" placeholder="Full Name"><input id="cPhone" class="input" placeholder="WhatsApp"><button class="btn btn-w" style="width:100%;margin-top:8px" onclick="placeOrder()">Place Order</button><div id="orderResult"></div></div></div></div>
+</div>
+
+<!-- AI MODAL -->
+<div class="modal" id="aiModal"><div class="modalBox">
+<div style="display:flex;justify-content:space-between"><h3 style="color:var(--wine)">✨ AI Special Sew</h3><button class="btn" onclick="closeAI()">X</button></div>
+<div class="step active" id="step1"><h4>Step 1: Male / Female?</h4><div class="grid g2" style="margin-top:8px"><button class="btn btn-w" style="padding:18px" onclick="setGender('Male')">👔 Male</button><button class="btn bgold" style="padding:18px" onclick="setGender('Female')">👗 Female</button></div></div>
+<div class="step" id="step2"><h4>Step 2: Style?</h4><div id="styleOptions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div></div>
+<div class="step" id="step3"><h4>Step 3: Fabric & Details</h4><select id="aiFabric" class="input"><option>Atiku White</option><option>Atiku Cream</option><option>Cashmere Black</option><option>Senator Navy</option><option>Linen Beige</option><option>Wool Three Piece</option><option>Silk Wine Female</option><option>Crepe Emerald Female</option><option>Ankara Luxury</option></select><textarea id="aiDetails" class="input" placeholder="Special design? e.g gold thread, watch that stitches..."></textarea><button class="btn btn-w" style="margin-top:8px" onclick="nextStep(4)">Next → Measurements</button></div>
+<div class="step" id="step4"><h4>Step 4: Measurements (inches)</h4><div id="measureForm" style="margin-top:8px"></div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn" onclick="nextStep(3)">Back</button><button class="btn btn-w" onclick="nextStep(5)">Review</button></div></div>
+<div class="step" id="step5"><h4>Step 5: Review</h4><div id="aiReview" style="background:var(--goldL);padding:10px;border-radius:10px;font-size:11px;margin-top:8px"></div><button class="btn btn-g" style="width:100%;margin-top:8px" onclick="addBespoke()">Add Bespoke to Cart</button></div>
+</div></div>
+
+<!-- ADMIN MODAL - EDIT AFTER ONLINE -->
+<div class="modal" id="adminModal"><div class="modalBox">
+<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:var(--wine)">⚙️ Admin - Edit Shop</h3><button class="btn" onclick="closeAdmin()">X</button></div>
+
+<div id="adminLogin">
+<p style="font-size:11px;margin-top:8px">Enter admin password to edit prices, products, shop name after you go online. Default: <b>1234</b></p>
+<input id="adminPass" class="input" type="password" placeholder="Password">
+<button class="btn btn-w" style="width:100%;margin-top:8px" onclick="checkAdmin()">Unlock Admin</button>
+</div>
+
+<div id="adminPanel" class="hidden">
+<h4 style="margin-top:10px">Shop Settings</h4>
+<label style="font-size:10px;font-weight:800">Shop Name</label><input id="editShopName" class="input">
+<label style="font-size:10px;font-weight:800">Hero Subtitle</label><input id="editHeroSub" class="input">
+<label style="font-size:10px;font-weight:800">WhatsApp Number (e.g 2348012345678)</label><input id="editWhatsApp" class="input" placeholder="234...">
+<button class="btn btn-w" style="margin-top:8px" onclick="saveSettings()">Save Settings</button>
+
+<h4 style="margin-top:14px">Add New Product</h4>
+<div class="adminRow">
+<input id="newName" class="input" placeholder="Product Name e.g Male Caphtan 9">
+<div style="display:flex;gap:6px"><select id="newGender" class="input"><option>Male</option><option>Female</option></select><select id="newSub" class="input"><option>Caphtan</option><option>Native wear</option><option>Three piece</option><option>Corporate</option><option>Gown</option></select></div>
+<input id="newPrice" class="input" type="number" placeholder="Price e.g 45000">
+<input id="newOld" class="input" type="number" placeholder="Old Price e.g 55000">
+<input id="newStock" class="input" type="number" placeholder="Stock e.g 10">
+<input id="newFabric" class="input" placeholder="Fabric e.g Atiku">
+<input id="newImg" class="input" placeholder="Image Link (paste Unsplash / image URL)">
+<input id="newDesc" class="input" placeholder="Description">
+<button class="btn btn-g" style="width:100%;margin-top:8px" onclick="addProduct()">+ Add Product</button>
+</div>
+
+<h4>Edit / Delete Products - <span id="adminCount"></span></h4>
+<div id="adminList"></div>
+
+<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+<button class="btn" onclick="exportData()">⬇️ Export Backup</button>
+<button class="btn" onclick="resetData()">🔄 Reset to Default 50</button>
+<button class="btn btn-w" onclick="saveAll()">💾 Save All & Close</button>
+</div>
+<p style="font-size:9px;margin-top:8px;color:#666">Tip: After editing on your phone, click Save All. To make the change show for customers on other phones, use Export Backup and replace the data, or use same admin on your main device. For full multi-device sync you go need backend later - this frontend version na for easy editing.</p>
+</div>
+</div></div>
+
+<script>
+// ===== SETTINGS - EDITABLE =====
+const DEFAULT_SETTINGS = {shopName:"SAMPHENY STITCHES", heroSub:"Male: Caphtan • Native wear • Three piece • Corporate — Female: Caphtan • Gown — All with prices — Ready to wear + AI Bespoke", whatsapp:"2340000000000"};
+let settings = JSON.parse(localStorage.getItem('sampheny_settings') || JSON.stringify(DEFAULT_SETTINGS));
+
+// ===== DEFAULT 50 PRODUCTS =====
+const DEFAULT_PRODUCTS=[
+{id:1,gender:'Male',sub:'Caphtan',name:'Male Caphtan 1 — White Senator Atiku',price:45000,oldPrice:55000,stock:10,fabric:'Atiku',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'White senator, clean stitches'},
+{id:2,gender:'Male',sub:'Caphtan',name:'Male Caphtan 2 — Cream Atiku Gold Buttons',price:47000,oldPrice:58000,stock:8,fabric:'Atiku',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Cream with gold buttons'},
+{id:3,gender:'Male',sub:'Caphtan',name:'Male Caphtan 3 — Sky Blue Linen',price:38000,oldPrice:45000,stock:12,fabric:'Linen',img:'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600',desc:'Light blue linen breathable'},
+{id:4,gender:'Male',sub:'Caphtan',name:'Male Caphtan 4 — Navy Blue Senator',price:48000,oldPrice:60000,stock:9,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Navy blue senator sharp'},
+{id:5,gender:'Male',sub:'Caphtan',name:'Male Caphtan 5 — Black Cashmere Luxury',price:52000,oldPrice:65000,stock:6,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'Black luxury cashmere'},
+{id:6,gender:'Male',sub:'Caphtan',name:'Male Caphtan 6 — Beige Minimalist',price:40000,oldPrice:48000,stock:10,fabric:'Linen',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Beige minimalist clean'},
+{id:7,gender:'Male',sub:'Caphtan',name:'Male Caphtan 7 — Wine Atiku Special',price:50000,oldPrice:62000,stock:5,fabric:'Atiku',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'Wine color special stitches'},
+{id:8,gender:'Male',sub:'Caphtan',name:'Male Caphtan 8 — Emerald Green Caphtan',price:49000,oldPrice:59000,stock:7,fabric:'Atiku',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Emerald green standout'},
+{id:9,gender:'Male',sub:'Native wear',name:'Male Native Wear 1 — Navy with Gold Embroidery',price:58000,oldPrice:70000,stock:6,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'Navy native gold embroidery'},
+{id:10,gender:'Male',sub:'Native wear',name:'Male Native Wear 2 — White with Black Embroidery',price:55000,oldPrice:68000,stock:7,fabric:'Atiku',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'White native black thread'},
+{id:11,gender:'Male',sub:'Native wear',name:'Male Native Wear 3 — Burgundy Native',price:60000,oldPrice:75000,stock:5,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Burgundy native luxury'},
+{id:12,gender:'Male',sub:'Native wear',name:'Male Native Wear 4 — Royal Blue Native',price:57000,oldPrice:69000,stock:6,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Royal blue native'},
+{id:13,gender:'Male',sub:'Native wear',name:'Male Native Wear 5 — Ash Grey Native',price:53000,oldPrice:64000,stock:8,fabric:'Linen',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'Ash grey native simple'},
+{id:14,gender:'Male',sub:'Native wear',name:'Male Native Wear 6 — Olive Green Native',price:56000,oldPrice:68000,stock:6,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Olive green native'},
+{id:15,gender:'Male',sub:'Native wear',name:'Male Native Wear 7 — Chocolate Brown Native',price:59000,oldPrice:72000,stock:5,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Brown native premium'},
+{id:16,gender:'Male',sub:'Three piece',name:'Male Three Piece 1 — Black Agbada Complete',price:85000,oldPrice:100000,stock:4,fabric:'Wool',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Black 3 piece agbada'},
+{id:17,gender:'Male',sub:'Three piece',name:'Male Three Piece 2 — White Agbada Luxury',price:90000,oldPrice:110000,stock:3,fabric:'Atiku',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'White agbada wedding'},
+{id:18,gender:'Male',sub:'Three piece',name:'Male Three Piece 3 — Navy Blue Agbada',price:88000,oldPrice:105000,stock:3,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Navy agbada set'},
+{id:19,gender:'Male',sub:'Three piece',name:'Male Three Piece 4 — Gold Embroidery Agbada',price:95000,oldPrice:120000,stock:2,fabric:'Cashmere',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Gold embroidery luxury agbada'},
+{id:20,gender:'Male',sub:'Three piece',name:'Male Three Piece 5 — Wine Agbada Royal',price:92000,oldPrice:115000,stock:3,fabric:'Wool',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Wine royal agbada'},
+{id:21,gender:'Male',sub:'Corporate',name:'Male Corporate 1 — White Slim Shirt',price:18000,oldPrice:22000,stock:20,fabric:'Cotton',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'White corporate slim'},
+{id:22,gender:'Male',sub:'Corporate',name:'Male Corporate 2 — Blue Corporate Shirt',price:18000,oldPrice:22000,stock:18,fabric:'Cotton',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Blue corporate shirt'},
+{id:23,gender:'Male',sub:'Corporate',name:'Male Corporate 3 — Black Corporate Trouser',price:22000,oldPrice:28000,stock:15,fabric:'Cotton',img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600',desc:'Black trouser corporate'},
+{id:24,gender:'Male',sub:'Corporate',name:'Male Corporate 4 — Grey Two-Piece Suit',price:75000,oldPrice:90000,stock:5,fabric:'Wool',img:'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=600',desc:'Grey suit corporate'},
+{id:25,gender:'Male',sub:'Corporate',name:'Male Corporate 5 — Navy Blue Suit',price:78000,oldPrice:95000,stock:4,fabric:'Wool',img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600',desc:'Navy suit corporate'},
+{id:26,gender:'Female',sub:'Caphtan',name:'Female Caphtan 1 — Wine Silk Drape',price:48000,oldPrice:60000,stock:8,fabric:'Silk',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Wine silk female caphtan'},
+{id:27,gender:'Female',sub:'Caphtan',name:'Female Caphtan 2 — Emerald Crepe Caphtan',price:50000,oldPrice:62000,stock:7,fabric:'Crepe',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Emerald female caphtan'},
+{id:28,gender:'Female',sub:'Caphtan',name:'Female Caphtan 3 — Royal Blue Silk',price:52000,oldPrice:65000,stock:6,fabric:'Silk',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Royal blue silk caphtan'},
+{id:29,gender:'Female',sub:'Caphtan',name:'Female Caphtan 4 — Black Luxury Caphtan',price:55000,oldPrice:68000,stock:5,fabric:'Crepe',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Black luxury female caphtan'},
+{id:30,gender:'Female',sub:'Caphtan',name:'Female Caphtan 5 — Gold Sparkle Caphtan',price:62000,oldPrice:75000,stock:4,fabric:'Silk',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Gold sparkle caphtan'},
+{id:31,gender:'Female',sub:'Caphtan',name:'Female Caphtan 6 — Pink Soft Caphtan',price:45000,oldPrice:56000,stock:9,fabric:'Crepe',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Pink soft caphtan'},
+{id:32,gender:'Female',sub:'Caphtan',name:'Female Caphtan 7 — Cream Lace Mix Caphtan',price:58000,oldPrice:70000,stock:6,fabric:'Lace',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Cream lace mix caphtan'},
+{id:33,gender:'Female',sub:'Caphtan',name:'Female Caphtan 8 — White Angel Caphtan',price:50000,oldPrice:62000,stock:7,fabric:'Silk',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'White angel caphtan'},
+{id:34,gender:'Female',sub:'Caphtan',name:'Female Caphtan 9 — Nude Beige Caphtan',price:47000,oldPrice:58000,stock:8,fabric:'Crepe',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Nude beige caphtan'},
+{id:35,gender:'Female',sub:'Caphtan',name:'Female Caphtan 10 — Purple Luxury Caphtan',price:54000,oldPrice:67000,stock:5,fabric:'Silk',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Purple luxury caphtan'},
+{id:36,gender:'Female',sub:'Caphtan',name:'Female Caphtan 11 — Ankara Patch Caphtan',price:60000,oldPrice:73000,stock:5,fabric:'Ankara',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Ankara patch caphtan'},
+{id:37,gender:'Female',sub:'Caphtan',name:'Female Caphtan 12 — Red Velvet Caphtan',price:56000,oldPrice:69000,stock:6,fabric:'Velvet',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Red velvet caphtan'},
+{id:38,gender:'Female',sub:'Gown',name:'Female Gown 1 — Emerald Corporate Gown',price:55000,oldPrice:70000,stock:6,fabric:'Crepe',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Emerald corporate gown'},
+{id:39,gender:'Female',sub:'Gown',name:'Female Gown 2 — Black Evening Gown',price:65000,oldPrice:80000,stock:4,fabric:'Crepe',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Black evening gown'},
+{id:40,gender:'Female',sub:'Gown',name:'Female Gown 3 — Wine Dinner Gown',price:62000,oldPrice:76000,stock:5,fabric:'Silk',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Wine dinner gown'},
+{id:41,gender:'Female',sub:'Gown',name:'Female Gown 4 — Blue Mermaid Gown',price:70000,oldPrice:85000,stock:3,fabric:'Crepe',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Blue mermaid gown'},
+{id:42,gender:'Female',sub:'Gown',name:'Female Gown 5 — White Wedding Guest Gown',price:68000,oldPrice:82000,stock:4,fabric:'Lace',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'White wedding guest gown'},
+{id:43,gender:'Female',sub:'Gown',name:'Female Gown 6 — Ankara Long Gown',price:60000,oldPrice:73000,stock:6,fabric:'Ankara',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Ankara long gown'},
+{id:44,gender:'Female',sub:'Gown',name:'Female Gown 7 — Pink Soft Gown',price:52000,oldPrice:64000,stock:7,fabric:'Crepe',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Pink soft gown'},
+{id:45,gender:'Female',sub:'Gown',name:'Female Gown 8 — Gold Shimmer Gown',price:75000,oldPrice:90000,stock:3,fabric:'Sequin',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Gold shimmer gown'},
+{id:46,gender:'Female',sub:'Gown',name:'Female Gown 9 — Red Velvet Gown',price:67000,oldPrice:80000,stock:4,fabric:'Velvet',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Red velvet gown'},
+{id:47,gender:'Female',sub:'Gown',name:'Female Gown 10 — Nude Bodycon Gown',price:48000,oldPrice:59000,stock:8,fabric:'Crepe',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Nude bodycon gown'},
+{id:48,gender:'Female',sub:'Gown',name:'Female Gown 11 — Purple Lux Gown',price:62000,oldPrice:75000,stock:5,fabric:'Silk',img:'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600',desc:'Purple lux gown'},
+{id:49,gender:'Female',sub:'Gown',name:'Female Gown 12 — Orange Summer Gown',price:45000,oldPrice:56000,stock:9,fabric:'Crepe',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',desc:'Orange summer gown'},
+{id:50,gender:'Female',sub:'Gown',name:'Female Gown 13 — Black & White Corporate Gown',price:55000,oldPrice:68000,stock:6,fabric:'Crepe',img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600',desc:'Black white corporate gown'},
+];
+let products = JSON.parse(localStorage.getItem('sampheny_products') || JSON.stringify(DEFAULT_PRODUCTS));
+function saveProducts(){localStorage.setItem('sampheny_products',JSON.stringify(products))}
+function saveSettingsToStorage(){localStorage.setItem('sampheny_settings',JSON.stringify(settings))}
+
+let cart=[], bespokeCart=[], aiData={gender:'',sub:'',fabric:'',details:'',measures:{},price:0};
+function applySettings(){document.getElementById('shopName').innerText=settings.shopName;document.getElementById('heroTitle').innerHTML=settings.shopName+'<br>...WATCH THAT STITCHES';document.getElementById('heroSub').innerText=settings.heroSub;const m=products.filter(p=>p.gender==='Male').length,f=products.filter(p=>p.gender==='Female').length;document.getElementById('totalBadge').innerText=products.length+' CLOTHES WITH PRICES';document.getElementById('maleBadge').innerText=m+' MALE';document.getElementById('femaleBadge').innerText=f+' FEMALE';}
+function renderNav(){document.getElementById('nav').innerHTML=`<div class="t active" onclick="switchTab('home')">HOME ${products.length}</div><div class="t" onclick="switchTab('shop')">SHOP ALL ${products.length}</div><div class="t" onclick="filterCat('Male','all')">MALE</div><div class="t" onclick="filterCat('Female','all')">FEMALE</div><div class="t gold" onclick="openAI()">✨ AI SPECIAL SEW</div>`;}
+function switchTab(id){document.querySelectorAll('[id^=v-]').forEach(e=>e.classList.add('hidden'));document.getElementById('v-'+id).classList.remove('hidden');if(id==='home')renderHome();if(id==='shop')renderShop();if(id==='cart')renderCart();}
+function prodCard(p){return `<div class="prod ${p.gender==='Female'?'female':''}" onclick="openProduct(${p.id})"><div class="pimg"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/400x600?text=Sampheny'"><div style="position:absolute;top:6px;left:6px"><span class="badge bwine">${p.gender}</span> <span class="badge bgold">${p.sub}</span></div><div style="position:absolute;bottom:6px;left:6px"><span class="badge bwhite">${p.stock} left</span></div></div><div style="padding:8px"><div style="font-size:10px;font-weight:800;height:28px;overflow:hidden">${p.name}</div><div style="font-size:8px;color:#666">${p.fabric}</div><div style="display:flex;justify-content:space-between;margin-top:4px"><span class="price">₦${p.price.toLocaleString()}</span><span class="old">₦${p.oldPrice.toLocaleString()}</span></div><div style="display:flex;gap:4px;margin-top:6px"><button class="btn btn-w" onclick="event.stopPropagation();addToCart(${p.id})">Add</button><button class="btn" onclick="event.stopPropagation();openProduct(${p.id})">View</button></div></div></div>`;}
+function renderHome(){applySettings();document.getElementById('homeGrid').innerHTML=products.map(p=>prodCard(p)).join('')}
+function filterCat(g,s){document.getElementById('fGender').value=g;document.getElementById('fSub').value=s;switchTab('shop');renderShop()}
+function renderShop(){const g=document.getElementById('fGender').value,s=document.getElementById('fSub').value,term=document.getElementById('search').value.toLowerCase();let list=[...products];if(g!=='all')list=list.filter(p=>p.gender===g);if(s!=='all')list=list.filter(p=>p.sub.toLowerCase()===s.toLowerCase());if(term)list=list.filter(p=>p.name.toLowerCase().includes(term));document.getElementById('shopGrid').innerHTML=list.map(p=>prodCard(p)).join('')||'No match';}
+function doSearch(){switchTab('shop');renderShop()}
+function openProduct(id){const p=products.find(x=>x.id===id);switchTab('product');document.getElementById('productDetail').innerHTML=`<div class="card"><div class="pimg" style="height:380px"><img src="${p.img}"></div></div><div class="card"><h2 style="color:var(--wine)">${p.name}</h2><div><span class="badge bwine">${p.gender}</span> <span class="badge bgold">${p.sub}</span></div><div style="margin-top:8px"><span class="price" style="font-size:22px">₦${p.price.toLocaleString()}</span> <span class="old">₦${p.oldPrice.toLocaleString()}</span></div><p style="margin-top:8px;font-size:11px">${p.desc} — Fabric: ${p.fabric} — Watch that stitches premium finishing.</p><div class="grid g2" style="margin-top:10px"><button class="btn btn-w" onclick="addToCart(${p.id})">Add to Cart</button><button class="btn btn-g" onclick="openAI()">✨ Need Special Sew?</button></div></div>`}
+function addToCart(id){const p=products.find(x=>x.id===id);const ex=cart.find(c=>c.id===id);if(ex)ex.qty++;else cart.push({...p,qty:1});updateCount();alert(p.name+' added')}
+function updateCount(){document.getElementById('cartCount').innerText=`Cart: ${cart.length+bespokeCart.length} — ₦${(cart.reduce((s,c)=>s+c.price*c.qty,0)+bespokeCart.reduce((s,c)=>s+c.price,0)).toLocaleString()}`;}
+function renderCart(){document.getElementById('cartList').innerHTML=cart.length?cart.map((c,i)=>`<div class="list"><div><b>${c.name}</b><br>₦${c.price.toLocaleString()} x ${c.qty}</div><button class="btn" onclick="cart.splice(${i},1);renderCart();updateCount()">X</button></div>`).join(''):'Empty';document.getElementById('bespokeList').innerHTML=bespokeCart.length?bespokeCart.map((b,i)=>`<div class="list"><div><b>Bespoke: ${b.gender} ${b.sub}</b><br>${Object.entries(b.measures).map(([k,v])=>`${k}:${v}"`).join(' ')}<br>₦${b.price.toLocaleString()}</div><button class="btn" onclick="bespokeCart.splice(${i},1);renderCart();updateCount()">X</button></div>`).join(''):'No bespoke';const total=cart.reduce((s,c)=>s+c.price*c.qty,0)+bespokeCart.reduce((s,c)=>s+c.price,0);document.getElementById('cartTotal').innerHTML=`Total: ₦${total.toLocaleString()}`;updateCount();}
+function placeOrder(){if(!cart.length&&!bespokeCart.length)return alert('Empty');const name=document.getElementById('cName').value.trim();if(!name)return alert('Name needed');const phone=document.getElementById('cPhone').value.trim();const total=cart.reduce((s,c)=>s+c.price*c.qty,0)+bespokeCart.reduce((s,c)=>s+c.price,0);const msg=encodeURIComponent(`Hello Sampheny Stitches! New Order from ${name} - Total ₦${total.toLocaleString()}\nItems: ${cart.map(c=>c.name+' x'+c.qty).join(', ')} ${bespokeCart.map(b=>'Bespoke '+b.gender+' '+b.sub).join(', ')}`);document.getElementById('orderResult').innerHTML=`<div class="card wine">Order Received ${name}! Total ₦${total.toLocaleString()} — We will WhatsApp you</div><a href="https://wa.me/${settings.whatsapp}?text=${msg}" target="_blank"><button class="btn btn-g" style="width:100%;margin-top:8px">Send Order to WhatsApp</button></a>`;cart=[];bespokeCart=[];renderCart();}
+function openAI(){document.getElementById('aiModal').classList.add('show');showStep(1)} function closeAI(){document.getElementById('aiModal').classList.remove('show')}
+function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step'+n).classList.add('active')}
+function nextStep(n){if(n===5)buildReview();showStep(n)}
+function setGender(g){aiData.gender=g;const subs=g==='Male'?['Caphtan','Native wear','Three piece','Corporate']:['Caphtan','Gown'];document.getElementById('styleOptions').innerHTML=subs.map(s=>`<button class="btn ${g==='Female'?'bgold':'btn-w'}" onclick="setSub('${s}')">${s}</button>`).join('');buildMeasureForm();showStep(2)}
+function setSub(s){aiData.sub=s;showStep(3)}
+function buildMeasureForm(){const fields=[['Top length','Top Length'],['Full length','Full Length'],['Shoulder','Shoulder'],['Sleeve length','Sleeve Length'],['Round sleeve','Round Sleeve'],['Chest','Chest'],['Neck','Neck'],['Waist','Waist (Trouser West)'],['Lap','Lap'],['Ankle','Ankle']];let html='<div class="measureGrid">';fields.forEach(([k,l])=>{html+=`<div><label style="font-size:9px;font-weight:800">${l}</label><input id="m_${k}" class="input" placeholder="e.g 32"></div>`});html+='</div>';document.getElementById('measureForm').innerHTML=html;}
+function buildReview(){aiData.fabric=document.getElementById('aiFabric').value;aiData.details=document.getElementById('aiDetails').value;const measures={};document.querySelectorAll('[id^=m_]').forEach(inp=>{if(inp.value)measures[inp.id.replace('m_','')]=inp.value});aiData.measures=measures;let price=aiData.gender==='Male'?(aiData.sub==='Three piece'?85000:aiData.sub==='Native wear'?56000:aiData.sub==='Corporate'?20000:45000):(aiData.sub==='Gown'?60000:50000);document.getElementById('aiReview').innerHTML=`<b>${aiData.gender} — ${aiData.sub}</b><br>Fabric: ${aiData.fabric}<br>Details: ${aiData.details||'Standard'}<br><br>${Object.entries(measures).map(([k,v])=>`• ${k}: ${v}"`).join('<br>')}<br><br><b>Estimate: ₦${price.toLocaleString()}</b>`;aiData.price=price;}
+function addBespoke(){if(!Object.keys(aiData.measures).length)return alert('Enter at least Top length, Shoulder, Chest');bespokeCart.push({...aiData});closeAI();switchTab('cart');renderCart();updateCount();alert('Bespoke added!')}
+
+// ===== ADMIN =====
+function openAdmin(){document.getElementById('adminModal').classList.add('show');document.getElementById('adminLogin').classList.remove('hidden');document.getElementById('adminPanel').classList.add('hidden')}
+function closeAdmin(){document.getElementById('adminModal').classList.remove('show')}
+function checkAdmin(){if(document.getElementById('adminPass').value==='1234'){document.getElementById('adminLogin').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden');document.getElementById('editShopName').value=settings.shopName;document.getElementById('editHeroSub').value=settings.heroSub;document.getElementById('editWhatsApp').value=settings.whatsapp;renderAdminList();}else alert('Wrong password')}
+function renderAdminList(){document.getElementById('adminCount').innerText=products.length;document.getElementById('adminList').innerHTML=products.map(p=>`<div class="adminRow"><input class="input" value="${p.name.replace(/"/g,'')}" onchange="editField(${p.id},'name',this.value)"><div style="display:flex;gap:6px"><input class="input" type="number" value="${p.price}" onchange="editField(${p.id},'price',this.value)"><input class="input" type="number" value="${p.oldPrice}" onchange="editField(${p.id},'oldPrice',this.value)"><input class="input" type="number" value="${p.stock}" onchange="editField(${p.id},'stock',this.value)"></div><input class="input" value="${p.img}" onchange="editField(${p.id},'img',this.value)" placeholder="Image URL"><input class="input" value="${p.desc}" onchange="editField(${p.id},'desc',this.value)"><div style="display:flex;gap:6px;margin-top:6px"><select class="input" onchange="editField(${p.id},'gender',this.value)"><option ${p.gender==='Male'?'selected':''}>Male</option><option ${p.gender==='Female'?'selected':''}>Female</option></select><select class="input" onchange="editField(${p.id},'sub',this.value)"><option ${p.sub==='Caphtan'?'selected':''}>Caphtan</option><option ${p.sub==='Native wear'?'selected':''}>Native wear</option><option ${p.sub==='Three piece'?'selected':''}>Three piece</option><option ${p.sub==='Corporate'?'selected':''}>Corporate</option><option ${p.sub==='Gown'?'selected':''}>Gown</option></select><button class="btn" onclick="deleteProduct(${p.id})">🗑 Delete</button></div></div>`).join('')}
+function editField(id,field,val){const p=products.find(x=>x.id===id);if(field==='price'||field==='oldPrice'||field==='stock')val=Number(val);p[field]=val;saveProducts();renderHome();renderNav();}
+function deleteProduct(id){if(confirm('Delete this product?')){products=products.filter(p=>p.id!==id);saveProducts();renderAdminList();renderHome();renderNav();}}
+function addProduct(){const name=document.getElementById('newName').value.trim();if(!name)return alert('Enter name');const np={id:Date.now(),gender:document.getElementById('newGender').value,sub:document.getElementById('newSub').value,name:name,price:Number(document.getElementById('newPrice').value||0),oldPrice:Number(document.getElementById('newOld').value||0),stock:Number(document.getElementById('newStock').value||10),fabric:document.getElementById('newFabric').value||'Atiku',img:document.getElementById('newImg').value||'https://via.placeholder.com/400x600?text=Sampheny',desc:document.getElementById('newDesc').value||''};products.push(np);saveProducts();renderAdminList();renderHome();renderNav();alert('Added!');}
+function saveSettings(){settings.shopName=document.getElementById('editShopName').value||settings.shopName;settings.heroSub=document.getElementById('editHeroSub').value||settings.heroSub;settings.whatsapp=document.getElementById('editWhatsApp').value||settings.whatsapp;saveSettingsToStorage();applySettings();alert('Settings saved!')}
+function saveAll(){saveProducts();saveSettingsToStorage();renderHome();renderNav();closeAdmin();alert('All saved! Site updated.')}
+function exportData(){const data=JSON.stringify({settings,products},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sampheny-backup.json';a.click();}
+function resetData(){if(confirm('Reset to default 50?')){products=JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));settings=JSON.parse(JSON.stringify(DEFAULT_SETTINGS));saveProducts();saveSettingsToStorage();renderAdminList();renderHome();renderNav();alert('Reset done')}}
+
+renderNav();renderHome();updateCount();
+</script>
+</body>
+  </html>
